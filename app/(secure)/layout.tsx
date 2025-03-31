@@ -1,13 +1,14 @@
-import "../globals.css";
+import { Footer } from "../components/footer";
 
-export default function RootLayout({
+export default function SecureLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <section>
+      {children}
+      <Footer />
+    </section>
   );
 }
