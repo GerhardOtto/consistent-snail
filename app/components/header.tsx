@@ -26,7 +26,7 @@ export const Header = async () => {
 
   return (
     <section className="flex justify-between h-20 items-center z-10">
-      <div className="mx-20">
+      <div className="mx-5">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar>
