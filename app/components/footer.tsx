@@ -1,9 +1,41 @@
+import { Button } from "@/components/ui/button";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import Link from "next/link";
+
 export const Footer = () => {
   return (
-    <section className="flex justify-between h-20 items-center z-10 bg-lime-500">
-      <div className="mx-20">
-        <div>Footer</div>
-      </div>
+    <section className="flex justify-between h-20 items-center z-10">
+      <Menubar className="w-full flex justify-evenly mx-5">
+        <MenubarMenu>
+          <Button variant={"ghost"} asChild>
+            <Link href={"/"}>Index</Link>
+          </Button>
+        </MenubarMenu>
+        <MenubarMenu>
+          <Button variant={"ghost"} asChild>
+            <Link href={"/history"}>History</Link>
+          </Button>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Create</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem inset>
+              <Link href={"/create/routine"}>Routine</Link>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem inset>
+              <Link href={"/create/workout"}>Workout</Link>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
     </section>
   );
 };
