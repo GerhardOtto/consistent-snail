@@ -1,7 +1,11 @@
 export default function OpenLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return <section>{children}</section>
+  return (
+    <section className="min-h-screen flex flex-col justify-center items-center">
+      <div>{children}</div>
+    </section>
+  );
 }

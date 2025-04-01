@@ -38,14 +38,13 @@ export default function LoginForm() {
     formData.append("email", values.email);
     formData.append("password", values.password);
 
-    toast("Welcome back", {
-    });
+    toast("Welcome back", {});
 
     await login(formData);
   };
 
   return (
-    <section className="flex items-center justify-center min-h-screen">
+    <section className="flex items-center justify-center">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -80,9 +79,6 @@ export default function LoginForm() {
           />
           <div className="flex flex-col gap-3">
             <Button type="submit">Log in</Button>
-            <Button asChild type="button" variant="secondary">
-              <Link href="/signup">Sign up</Link>
-            </Button>
           </div>
         </form>
       </Form>
