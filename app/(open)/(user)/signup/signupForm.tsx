@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signup } from "../actions";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().min(2, {
@@ -29,6 +30,7 @@ export default function SignupForm() {
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -38,6 +40,10 @@ export default function SignupForm() {
     formData.append("password", values.password);
 
     await signup(formData);
+    
+    toast("Confirm email", {
+      description: `Email sent to ${values.email}`,
+    })
   };
 
   return (
@@ -67,6 +73,20 @@ export default function SignupForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input placeholder="Password" type="password" {...field} />
                 </FormControl>

@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { login } from "../actions";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().min(2, {
@@ -36,6 +37,9 @@ export default function LoginForm() {
     const formData = new FormData();
     formData.append("email", values.email);
     formData.append("password", values.password);
+
+    toast("Welcome back", {
+    });
 
     await login(formData);
   };
