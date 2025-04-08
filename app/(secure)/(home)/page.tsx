@@ -1,8 +1,14 @@
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <>
-    Welcome Home
-    </>
-  );
+import { createClient } from "@/utils/supabase/server";
+
+export default async function PrivatePage() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) {
+    redirect("/login");
+  }
+
+  return <p className="mx-5">Hello {data.user.email}</p>;
 }
