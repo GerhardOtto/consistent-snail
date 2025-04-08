@@ -38,9 +38,9 @@ export default function LoginForm() {
     formData.append("email", values.email);
     formData.append("password", values.password);
 
-    toast("Welcome back", {});
-
     await login(formData);
+    
+    toast(`Welcome back ${values.email}`);
   };
 
   return (
