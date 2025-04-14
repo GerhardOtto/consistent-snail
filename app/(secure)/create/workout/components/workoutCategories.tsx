@@ -1,13 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { WorkoutCategoryType } from "@/utils/db/schema";
 import {
   addWorkoutCategory,
   deleteWorkoutCategory,
   editWorkoutCategory,
 } from "@/utils/db/workoutCategoryActions";
-import { workoutCategory, WorkoutCategoryType } from "@/utils/db/schema";
 import { FC, useState } from "react";
+import { CreateWorkoutCategory } from "./createWorkoutCategory";
+import { DeleteWorkoutCategory } from "./deleteWorkoutCategory";
+import { UpdateWorkoutCategory } from "./updateWorkoutCategory";
 
 interface Props {
   workoutCategories: WorkoutCategoryType[];
@@ -23,13 +25,6 @@ export const WorkoutCategories: FC<Props> = ({ workoutCategories }) => {
     setWorkoutCategoryItems((prev) => [...prev, { id: id, displayName }]);
   };
 
-  const removeWorkoutCategory = (id: number) => {
-    setWorkoutCategoryItems((prev) =>
-      prev.filter((workoutCategory) => workoutCategory.id !== id)
-    );
-    deleteWorkoutCategory(id);
-  };
-
   const renameWorkoutCategory = (id: number, displayName: string) => {
     setWorkoutCategoryItems((prev) =>
       prev.map((workoutCategory) =>
@@ -42,15 +37,19 @@ export const WorkoutCategories: FC<Props> = ({ workoutCategories }) => {
   };
 
   return (
-    <div>
-      {workoutCategoryItems.map((item, index) => (
-        <span key={index}>{item.displayName}</span>
-      ))}
-      <Button onClick={() => createWorkoutCategory("Pullups")}>Create</Button>
-      <Button onClick={() => removeWorkoutCategory(1)}>Delete</Button>
-      <Button onClick={() => renameWorkoutCategory(1, "Chinups")}>
-        Rename
-      </Button>
-    </div>
+    //   <div>
+    //   {" "}
+
+    //   <Button onClick={() => removeWorkoutCategory(1)}>Delete</Button>
+    //   <Button onClick={() => renameWorkoutCategory(1, "Chinups")}>
+    //     Rename
+    //   </Button>
+    // </div>
+
+    <section>
+      <CreateWorkoutCategory workoutCategories={workoutCategories} />
+      <DeleteWorkoutCategory workoutCategories={workoutCategories} />
+      <UpdateWorkoutCategory workoutCategories={workoutCategories} />
+    </section>
   );
 };
