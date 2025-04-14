@@ -34,6 +34,6 @@ export const workoutCategory = pgTable("workout_category", {
 	displayName: varchar("display_name", { length: 255 }).notNull(),
 });
 
-export type Workout = typeof workout.$inferSelect;
-export type ExerciseDay = typeof exerciseDay.$inferSelect;
-export type WorkoutCategory = typeof workoutCategory.$inferSelect;
+export type WorkoutType = typeof workout.$inferSelect;
+export type ExerciseDayType = typeof exerciseDay.$inferSelect;
+export type WorkoutCategoryType = typeof workoutCategory.$inferSelect;

@@ -1,5 +1,7 @@
-import { redirect } from "next/navigation";
+import { getWorkoutCategories } from "@/utils/db/workoutCategoryActions";
 import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { WorkoutCategories } from "../../categories";
 
 export default async function PrivatePage() {
   const supabase = await createClient();
@@ -9,9 +11,11 @@ export default async function PrivatePage() {
     redirect("/login");
   }
 
+  const categories = await getWorkoutCategories();
+
   return (
     <section>
-      <p className="mx-5">Hello {data.user.email}</p>
+      <WorkoutCategories workoutCategories={categories} />
     </section>
   );
 }
