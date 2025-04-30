@@ -63,7 +63,7 @@ export const DeleteWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     removeWorkoutCategory(Number(values.workoutCategoryId));
     // TODO: Display deleted category name
     // toast(`Removed Category: ${workoutCategoryName}`);
-    toast(`Removed Category: ...`);
+    toast(`Removed Category.`);
     setOpen(false);
     form.reset();
     console.log(values);
@@ -71,7 +71,11 @@ export const DeleteWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
   return (
     <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>
-        <Button variant="outline" onClick={() => setOpen(true)}>
+        <Button
+          variant="outline"
+          onClick={() => setOpen(true)}
+          className="w-full"
+        >
           Delete Category
         </Button>
       </DrawerTrigger>

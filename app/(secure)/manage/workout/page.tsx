@@ -1,7 +1,7 @@
 import { getWorkoutCategories } from "@/utils/db/workoutCategoryActions";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { WorkoutCategories } from "./components/workoutCategories";
+import { WorkoutCategories } from "./sections/workoutCategories";
 
 export default async function PrivatePage() {
   const supabase = await createClient();

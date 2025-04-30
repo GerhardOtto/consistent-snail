@@ -61,7 +61,11 @@ export const CreateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
   return (
     <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>
-        <Button variant="outline" onClick={() => setOpen(true)}>
+        <Button
+          variant="outline"
+          onClick={() => setOpen(true)}
+          className="w-full"
+        >
           Create Category
         </Button>
       </DrawerTrigger>
