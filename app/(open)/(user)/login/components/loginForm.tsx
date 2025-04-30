@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signup } from "../actions";
+import { login } from "../../actions";
 import { toast } from "sonner";
 
 const formSchema = z.object({
@@ -21,16 +22,14 @@ const formSchema = z.object({
     message: "Email is required",
   }),
   password: z.string().min(1, { message: "Password is required" }),
-  confirmPassword: z.string().min(1, { message: "Password is required" }),
 });
 
-export default function SignupForm() {
+export default function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
@@ -39,11 +38,9 @@ export default function SignupForm() {
     formData.append("email", values.email);
     formData.append("password", values.password);
 
-    await signup(formData);
+    await login(formData);
     
-    toast("Confirm email", {
-      description: `Email sent to ${values.email}`,
-    })
+    toast(`Welcome back ${values.email}`);
   };
 
   return (
@@ -80,21 +77,9 @@ export default function SignupForm() {
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input placeholder="Password" type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Sign Up</Button>
+          <div className="flex flex-col gap-3">
+            <Button type="submit">Log in</Button>
+          </div>
         </form>
       </Form>
     </section>
