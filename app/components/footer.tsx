@@ -24,14 +24,14 @@ export const Footer = () => {
           </Button>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Create</MenubarTrigger>
+          <MenubarTrigger>Manage</MenubarTrigger>
           <MenubarContent>
             <MenubarItem inset>
-              <Link href={"/create/routine"}>Routine</Link>
+              <Link href={"/manage/routine"}>Routine</Link>
             </MenubarItem>
             <MenubarSeparator />
             <MenubarItem inset>
-              <Link href={"/create/workout"}>Workout</Link>
+              <Link href={"/manage/workout"}>Workout</Link>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>

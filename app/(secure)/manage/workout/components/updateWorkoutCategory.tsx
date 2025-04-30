@@ -70,7 +70,7 @@ export const UpdateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
       Number(values.workoutCategoryId),
       values.workoutCategoryName
     );
-    toast(`Updated category: ${values.workoutCategoryName}`);
+    toast(`Updated category to: ${values.workoutCategoryName}`);
     setOpen(false);
     form.reset();
     console.log(values);
