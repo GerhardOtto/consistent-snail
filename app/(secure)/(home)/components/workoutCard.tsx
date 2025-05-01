@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { addWorkoutEvent } from "@/utils/db/workoutEventActions";
+import { addWorkoutEventOnWorkoutSession } from "@/utils/db/workoutSessionAction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { FC, useState } from "react";
@@ -39,12 +40,19 @@ const formSchema = z.object({
   weightUsed: z.string().min(1),
 });
 
-export const WorkoutCard: FC<Props> = ({ id, displayName, sets, reps, sessionId }) => {
+export const WorkoutCard: FC<Props> = ({
+  id,
+  displayName,
+  sets,
+  reps,
+  sessionId,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(true);
   const createWorkoutEvent = (weight: number): Promise<void> => {
     setLoading(true);
-    return addWorkoutEvent(id, weight)
+    const workoutId = addWorkoutEvent(id, weight);
+    return workoutId
       .then(() => {
         setVisible(false);
       })
@@ -65,7 +73,11 @@ export const WorkoutCard: FC<Props> = ({ id, displayName, sets, reps, sessionId 
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
-      await createWorkoutEvent(parseInt(value.weightUsed, 10));
+      await createWorkoutEvent(parseInt(value.weightUsed, 10))
+        .then(async () => {
+          console.log("event id: ", id, "sessionId: ", sessionId);
+          await addWorkoutEventOnWorkoutSession(id, sessionId);
+        });
       toast.success(`Successfully stored workout event`);
     } catch (error: any) {
       toast.error(

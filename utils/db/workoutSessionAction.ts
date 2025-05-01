@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "./db";
-import { session } from "./schema";
+import { eventSession, session } from "./schema";
 
 export const getWorkoutSession = async () => {
   const data = await db.select().from(session);
@@ -24,4 +24,13 @@ export const addWorkoutSession = async (): Promise<number> => {
       reject(error);
     }
   });
+};
+
+export const addWorkoutEventOnWorkoutSession = async (
+  eventId: number,
+  sessionId: number
+) => {
+  await db
+    .insert(eventSession)
+    .values({ eventId: eventId, sessionId: sessionId });
 };
