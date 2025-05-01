@@ -53,8 +53,9 @@ export const WorkoutCard: FC<Props> = ({
     setLoading(true);
     const workoutId = addWorkoutEvent(id, weight);
     return workoutId
-      .then(() => {
-        setVisible(false);
+      .then(async () => {
+        setVisible(false)
+        await addWorkoutEventOnWorkoutSession(await workoutId, sessionId)
       })
       .catch((error) => {
         throw error;
@@ -74,10 +75,6 @@ export const WorkoutCard: FC<Props> = ({
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
       await createWorkoutEvent(parseInt(value.weightUsed, 10))
-        .then(async () => {
-          console.log("event id: ", id, "sessionId: ", sessionId);
-          await addWorkoutEventOnWorkoutSession(id, sessionId);
-        });
       toast.success(`Successfully stored workout event`);
     } catch (error: any) {
       toast.error(
