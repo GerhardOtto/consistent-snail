@@ -12,25 +12,27 @@ export const StartSession: React.FC<Props> = ({ onStartSession }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [activeSession, setActiveSession] = useState<boolean>(false);
 
-  const CreateWorkoutSession = async (): Promise<void | number> => {
+  const CreateWorkoutSession = async (): Promise<void> => {
     setLoading(true);
-    try {
-      const sessionId = await addWorkoutSession();
-      Promise.resolve(sessionId);
-      onStartSession(sessionId);
-      toast.success(`Started session number: ${sessionId}`);
-      setActiveSession(true);
-    } catch (error: any) {
-      console.error("Error creating workout session:", error);
-      toast.error(
-        `Failed to start session: ${
-          error.message || "An unexpected error occurred."
-        }`
-      );
-      return Promise.reject(error);
-    } finally {
-      setLoading(false);
-    }
+    const sessionId = addWorkoutSession();
+    return sessionId
+      .then(async () => {
+        onStartSession(await sessionId);
+        toast.success(`Started session number: ${sessionId}`);
+        setActiveSession(true);
+      })
+      .catch((error) => {
+        console.error("Error creating workout session:", error);
+        toast.error(
+          `Failed to start session: ${
+            error.message || "An unexpected error occurred."
+          }`
+        );
+        throw error;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
