@@ -23,11 +23,13 @@ import { WorkoutCategoryType } from "@/utils/db/schema";
 interface props {
   categories: WorkoutCategoryType[];
   onCategorySelect: (id: number) => void;
+  disableSelect?: boolean;
 }
 
 export const SelectCategory: React.FC<props> = ({
   categories,
   onCategorySelect,
+  disableSelect
 }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -39,7 +41,8 @@ export const SelectCategory: React.FC<props> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
+          disabled={disableSelect}
         >
           {value
             ? categories.find((category) => category.displayName === value)
@@ -48,7 +51,7 @@ export const SelectCategory: React.FC<props> = ({
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="min-w-full p-0">
         <Command>
           <CommandInput placeholder="Search category..." className="h-9" />
           <CommandList>

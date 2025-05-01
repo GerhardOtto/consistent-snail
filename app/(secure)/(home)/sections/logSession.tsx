@@ -18,9 +18,12 @@ export const LogSession: React.FC<Props> = ({ categories }) => {
     setSelectedCategoryId(id);
   };
 
+  const [disableCategory, setDisableCategory] = useState<boolean>(false);
+
   const [sessionId, setSessionId] = useState<number | undefined>(undefined);
   const handleStartSession = (id: number) => {
     setSessionId(id);
+    setDisableCategory(true);
   };
 
   return (
@@ -28,8 +31,11 @@ export const LogSession: React.FC<Props> = ({ categories }) => {
       <SelectCategory
         categories={categories}
         onCategorySelect={handleCategorySelect}
+        disableSelect={disableCategory}
       />
-      <StartSession onStartSession={handleStartSession} />
+      {selectedCategoryId && (
+        <StartSession onStartSession={handleStartSession} />
+      )}
       {selectedCategoryId && sessionId && (
         <WorkoutWidget
           workoutCategoryId={selectedCategoryId}

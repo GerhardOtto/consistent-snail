@@ -10,14 +10,16 @@ interface Props {
 
 export const StartSession: React.FC<Props> = ({ onStartSession }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [activeSession, setActiveSession] = useState<boolean>(false);
 
   const CreateWorkoutSession = async (): Promise<void | number> => {
     setLoading(true);
     try {
       const sessionId = await addWorkoutSession();
-      onStartSession(sessionId);
       Promise.resolve(sessionId);
+      onStartSession(sessionId);
       toast.success(`Started session number: ${sessionId}`);
+      setActiveSession(true);
     } catch (error: any) {
       console.error("Error creating workout session:", error);
       toast.error(
@@ -33,9 +35,19 @@ export const StartSession: React.FC<Props> = ({ onStartSession }) => {
 
   return (
     <>
-      {!loading && (
+      {!loading && !activeSession && (
         <Button type="submit" className="w-full" onClick={CreateWorkoutSession}>
           Start Session
+        </Button>
+      )}
+      {!loading && activeSession && (
+        <Button
+          type="submit"
+          className="w-full"
+          onClick={CreateWorkoutSession}
+          disabled
+        >
+          Session Started
         </Button>
       )}
       {loading && (
