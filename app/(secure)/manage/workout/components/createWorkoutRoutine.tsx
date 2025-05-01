@@ -1,25 +1,30 @@
 import { Button } from "@/components/ui/button";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { WorkoutCategoryType, WorkoutRoutineType } from "@/utils/db/schema";
-import { addWorkoutCategory } from "@/utils/db/workoutCategoryActions";
 import { addWorkoutRoutine } from "@/utils/db/workoutRoutineActions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC, useState } from "react";
@@ -37,22 +42,32 @@ const formSchema = z.object({
   sets: z.string().min(1),
   reps: z.string().min(1),
   workoutCategoryId: z.string(),
-
 });
 
-export const CreateWorkoutRoutine: FC<Props> = ({ workoutRoutines, workoutCategories }) => {
+export const CreateWorkoutRoutine: FC<Props> = ({
+  workoutRoutines,
+  workoutCategories,
+}) => {
   const [workoutRoutineItems, setWorkoutRoutineItems] =
     useState<WorkoutRoutineType[]>(workoutRoutines);
 
-    const [workoutCategoryItems, setWorkoutCategoryItems] =
+  const [workoutCategoryItems, setWorkoutCategoryItems] =
     useState<WorkoutCategoryType[]>(workoutCategories);
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const CreateWorkoutRoutine = (displayName: string, sets: number, reps: number, workoutCategoryId: number) => {
+  const CreateWorkoutRoutine = (
+    displayName: string,
+    sets: number,
+    reps: number,
+    workoutCategoryId: number
+  ) => {
     const id = (workoutRoutineItems.at(-1)?.id || 0) + 1;
     addWorkoutRoutine(id, displayName, sets, reps, workoutCategoryId);
-    setWorkoutRoutineItems((prev) => [...prev, { id, displayName, sets, reps, workoutCategoryId }]);
+    setWorkoutRoutineItems((prev) => [
+      ...prev,
+      { id, displayName, sets, reps, workoutCategoryId },
+    ]);
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -118,7 +133,7 @@ export const CreateWorkoutRoutine: FC<Props> = ({ workoutRoutines, workoutCatego
                     <FormItem>
                       <FormLabel>Sets</FormLabel>
                       <FormControl>
-                        <Input placeholder="3" {...field} type="number"/>
+                        <Input placeholder="3" {...field} type="number" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -131,13 +146,13 @@ export const CreateWorkoutRoutine: FC<Props> = ({ workoutRoutines, workoutCatego
                     <FormItem>
                       <FormLabel>Reps</FormLabel>
                       <FormControl>
-                        <Input placeholder="9" {...field} type="number"/>
+                        <Input placeholder="9" {...field} type="number" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                                <FormField
+                <FormField
                   control={form.control}
                   name="workoutCategoryId"
                   render={({ field }) => (
