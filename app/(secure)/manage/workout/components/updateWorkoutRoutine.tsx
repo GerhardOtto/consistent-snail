@@ -25,10 +25,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { WorkoutCategoryType, WorkoutRoutineType } from "@/utils/db/schema";
-import {
-  editWorkoutRoutine
-} from "@/utils/db/workoutRoutineActions";
+import { editWorkoutRoutine } from "@/utils/db/workoutRoutineActions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -58,6 +57,7 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
     useState<WorkoutCategoryType[]>(workoutCategories);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const updateWorkoutRoutine = (
     id: number,
@@ -65,15 +65,24 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
     sets: number,
     reps: number,
     workoutCategoryId: number
-  ) => {
-    setWorkoutRoutineItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, displayName, sets, reps, workoutCategoryId }
-          : item
-      )
-    );
-    editWorkoutRoutine(id, displayName, sets, reps, workoutCategoryId);
+  ): Promise<void> => {
+    setLoading(true);
+    return editWorkoutRoutine(id, displayName, sets, reps, workoutCategoryId)
+      .then(() => {
+        setWorkoutRoutineItems((prev) =>
+          prev.map((item) =>
+            item.id === id
+              ? { ...item, displayName, sets, reps, workoutCategoryId }
+              : item
+          )
+        );
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -106,18 +115,25 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    updateWorkoutRoutine(
-      parseInt(values.workoutRoutineId, 10),
-      values.workoutRoutineName,
-      parseInt(values.sets, 10),
-      parseInt(values.reps, 10),
-      parseInt(values.workoutCategoryId, 10)
-    );
-    toast(`Updated routine: ${values.workoutRoutineName}`);
-    setOpen(false);
-    form.reset();
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await updateWorkoutRoutine(
+        parseInt(values.workoutRoutineId, 10),
+        values.workoutRoutineName,
+        parseInt(values.sets, 10),
+        parseInt(values.reps, 10),
+        parseInt(values.workoutCategoryId, 10)
+      );
+      toast.success(`Updated routine: ${values.workoutRoutineName}`);
+      setOpen(false);
+      form.reset();
+    } catch (error: any) {
+      toast.error(
+        `Failed to update routine: ${
+          error.message || "An unexpected error occurred."
+        }`
+      );
+    }
   }
   return (
     <Drawer onOpenChange={setOpen} open={open}>
@@ -237,9 +253,17 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
+                {!loading && (
+                  <Button type="submit" className="w-full">
+                    Submit
+                  </Button>
+                )}
+                {loading && (
+                  <Button disabled className="w-full">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                )}
               </form>
             </Form>
             <DrawerClose asChild>

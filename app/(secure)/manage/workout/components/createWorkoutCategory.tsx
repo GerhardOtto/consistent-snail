@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { WorkoutCategoryType } from "@/utils/db/schema";
 import { addWorkoutCategory } from "@/utils/db/workoutCategoryActions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,11 +39,19 @@ export const CreateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     useState<WorkoutCategoryType[]>(workoutCategories);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const createWorkoutCategory = (displayName: string) => {
+  const createWorkoutCategory = (displayName: string): Promise<void> => {
+    setLoading(true);
     const id = (workoutCategoryItems.at(-1)?.id || 0) + 1;
-    addWorkoutCategory(id, displayName);
-    setWorkoutCategoryItems((prev) => [...prev, { id: id, displayName }]);
+    return addWorkoutCategory(id, displayName)
+      .then(() => {
+        setWorkoutCategoryItems((prev) => [...prev, { id: id, displayName }]);
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => setLoading(false));
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,12 +60,19 @@ export const CreateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    createWorkoutCategory(values.workoutCategoryName);
-    toast(`Created category: ${values.workoutCategoryName}`);
-    setOpen(false);
-    form.reset();
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      createWorkoutCategory(values.workoutCategoryName);
+      toast.success(`Created category: ${values.workoutCategoryName}`);
+      setOpen(false);
+      form.reset();
+    } catch (error: any) {
+      toast.error(
+        `Failed to create category: ${
+          error.message || "An unexpected error occurred."
+        }`
+      );
+    }
   }
   return (
     <Drawer onOpenChange={setOpen} open={open}>
@@ -93,9 +109,17 @@ export const CreateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
+                {!loading && (
+                  <Button type="submit" className="w-full">
+                    Submit
+                  </Button>
+                )}
+                {loading && (
+                  <Button disabled className="w-full">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                )}
               </form>
             </Form>
             <DrawerClose asChild>

@@ -1,32 +1,34 @@
 import { Button } from "@/components/ui/button";
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { WorkoutCategoryType, WorkoutRoutineType } from "@/utils/db/schema";
 import { addWorkoutRoutine } from "@/utils/db/workoutRoutineActions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { error } from "console";
+import { Loader2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -55,19 +57,29 @@ export const CreateWorkoutRoutine: FC<Props> = ({
     useState<WorkoutCategoryType[]>(workoutCategories);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const CreateWorkoutRoutine = (
     displayName: string,
     sets: number,
     reps: number,
     workoutCategoryId: number
-  ) => {
+  ): Promise<void> => {
+    setLoading(true);
     const id = (workoutRoutineItems.at(-1)?.id || 0) + 1;
-    addWorkoutRoutine(id, displayName, sets, reps, workoutCategoryId);
-    setWorkoutRoutineItems((prev) => [
-      ...prev,
-      { id, displayName, sets, reps, workoutCategoryId },
-    ]);
+    return addWorkoutRoutine(id, displayName, sets, reps, workoutCategoryId)
+      .then(() => {
+        setWorkoutRoutineItems((prev) => [
+          ...prev,
+          { id, displayName, sets, reps, workoutCategoryId },
+        ]);
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,17 +91,24 @@ export const CreateWorkoutRoutine: FC<Props> = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    CreateWorkoutRoutine(
-      values.workoutRoutineName,
-      parseInt(values.sets, 10),
-      parseInt(values.reps, 10),
-      parseInt(values.workoutCategoryId, 10)
-    );
-    toast(`Created routine: ${values.workoutRoutineName}`);
-    setOpen(false);
-    form.reset();
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await CreateWorkoutRoutine(
+        values.workoutRoutineName,
+        parseInt(values.sets, 10),
+        parseInt(values.reps, 10),
+        parseInt(values.workoutCategoryId, 10)
+      );
+      toast.success(`Created routine: ${values.workoutRoutineName}`);
+      setOpen(false);
+      form.reset();
+    } catch (error: any) {
+      toast.error(
+        `Failed to create routine: ${
+          error.message || "An unexpected error occurred."
+        }`
+      );
+    }
   }
   return (
     <Drawer onOpenChange={setOpen} open={open}>
@@ -179,9 +198,17 @@ export const CreateWorkoutRoutine: FC<Props> = ({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
+                {!loading && (
+                  <Button type="submit" className="w-full">
+                    Submit
+                  </Button>
+                )}
+                {loading && (
+                  <Button disabled className="w-full">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                )}
               </form>
             </Form>
             <DrawerClose asChild>

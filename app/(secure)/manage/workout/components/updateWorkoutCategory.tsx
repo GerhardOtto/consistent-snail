@@ -27,6 +27,7 @@ import {
 import { WorkoutCategoryType } from "@/utils/db/schema";
 import { editWorkoutCategory } from "@/utils/db/workoutCategoryActions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,16 +47,29 @@ export const UpdateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     useState<WorkoutCategoryType[]>(workoutCategories);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const renameWorkoutCategory = (id: number, displayName: string) => {
-    setWorkoutCategoryItems((prev) =>
-      prev.map((workoutCategory) =>
-        workoutCategory.id === id
-          ? { ...workoutCategory, displayName }
-          : workoutCategory
-      )
-    );
-    editWorkoutCategory(id, displayName);
+  const renameWorkoutCategory = (
+    id: number,
+    displayName: string
+  ): Promise<void> => {
+    setLoading(true);
+    return editWorkoutCategory(id, displayName)
+      .then(() => {
+        setWorkoutCategoryItems((prev) =>
+          prev.map((workoutCategory) =>
+            workoutCategory.id === id
+              ? { ...workoutCategory, displayName }
+              : workoutCategory
+          )
+        );
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -77,15 +91,22 @@ export const UpdateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    renameWorkoutCategory(
-      Number(values.workoutCategoryId),
-      values.workoutCategoryName
-    );
-    toast(`Updated category to: ${values.workoutCategoryName}`);
-    setOpen(false);
-    form.reset();
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await renameWorkoutCategory(
+        Number(values.workoutCategoryId),
+        values.workoutCategoryName
+      );
+      toast.success(`Updated category to: ${values.workoutCategoryName}`);
+      setOpen(false);
+      form.reset();
+    } catch (error: any) {
+      toast.error(
+        `Failed to update category: ${
+          error.message || "An unexpected error occurred."
+        }`
+      );
+    }
   }
   return (
     <Drawer onOpenChange={setOpen} open={open}>
@@ -153,9 +174,21 @@ export const UpdateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
+                {!loading && (
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    variant={"destructive"}
+                  >
+                    Delete
+                  </Button>
+                )}
+                {loading && (
+                  <Button disabled className="w-full">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                )}
               </form>
             </Form>
             <DrawerClose asChild>

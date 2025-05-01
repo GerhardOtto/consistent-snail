@@ -26,6 +26,8 @@ import {
 import { WorkoutCategoryType } from "@/utils/db/schema";
 import { deleteWorkoutCategory } from "@/utils/db/workoutCategoryActions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { error } from "console";
+import { Loader2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -44,12 +46,32 @@ export const DeleteWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     useState<WorkoutCategoryType[]>(workoutCategories);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const removeWorkoutCategory = (id: number) => {
-    setWorkoutCategoryItems((prev) =>
-      prev.filter((workoutCategory) => workoutCategory.id !== id)
-    );
-    deleteWorkoutCategory(id);
+  const removeWorkoutCategory = (id: number): Promise<void> => {
+    // Optimistic UI update (optional, but can provide immediate feedback)
+    setLoading(true);
+
+    return deleteWorkoutCategory(id)
+      .then(() => {
+        // If deleteWorkoutCategory succeeds, the Promise resolves
+        // You might not need to do anything further here if the
+        // state update above is sufficient for immediate UI feedback.
+        setWorkoutCategoryItems((prev) =>
+          prev.filter((workoutCategory) => workoutCategory.id !== id)
+        );
+      })
+      .catch((error) => {
+        // If deleteWorkoutCategory fails, the Promise rejects
+        console.error("Error deleting workout category:", error);
+        // Optionally, you could revert the optimistic UI update here
+        // if you want the UI to only update on successful deletion:
+        // fetchUpdatedCategories(); // Or however you refresh your category list
+        throw error; // Re-throw the error to be caught by the caller
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,14 +81,23 @@ export const DeleteWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    removeWorkoutCategory(Number(values.workoutCategoryId));
-    // TODO: Display deleted category name
-    // toast(`Removed Category: ${workoutCategoryName}`);
-    toast(`Removed Category.`);
-    setOpen(false);
-    form.reset();
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const categoryIdToRemove = Number(values.workoutCategoryId);
+    try {
+      await removeWorkoutCategory(categoryIdToRemove);
+      toast.success(`Successfully removed category.`);
+      setOpen(false);
+      form.reset();
+    } catch (error: any) {
+      toast.error(
+        `Failed to remove category: ${
+          error.message || "An unexpected error occurred."
+        }`
+      );
+      // Optionally, if you did an optimistic UI update, you might want to
+      // refresh the category list here to revert the change on failure.
+      // fetchUpdatedCategories();
+    }
   }
   return (
     <Drawer onOpenChange={setOpen} open={open}>
@@ -117,9 +148,17 @@ export const DeleteWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
+                {!loading && (
+                  <Button type="submit" className="w-full" variant={"destructive"}>
+                    Delete
+                  </Button>
+                )}
+                {loading && (
+                  <Button disabled className="w-full">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                )}
               </form>
             </Form>
             <DrawerClose asChild>
