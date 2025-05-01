@@ -17,6 +17,7 @@ import { DeleteWorkoutCategory } from "../components/deleteWorkoutCategory";
 import { UpdateWorkoutCategory } from "../components/updateWorkoutCategory";
 import { CreateWorkoutRoutine } from "../components/createWorkoutRoutine";
 import { UpdateWorkoutRoutine } from "../components/updateWorkoutRoutine";
+import { DeleteWorkoutRoutine } from "../components/deleteWorkoutRoutine";
 
 interface Props {
   workoutCategories: WorkoutCategoryType[];
@@ -38,6 +39,9 @@ export const WorkoutSection: FC<Props> = ({ workoutCategories, workoutRoutines }
             <CardContent className="space-y-2">
               <div className="space-y-1">
                 <CreateWorkoutRoutine workoutRoutines={workoutRoutines} workoutCategories={workoutCategories}/>
+              </div>
+              <div className="space-y-1">
+              <DeleteWorkoutRoutine workoutRoutines={workoutRoutines} />
               </div>
               <div className="space-y-1">
                 <UpdateWorkoutRoutine workoutRoutines={workoutRoutines} workoutCategories={workoutCategories} />
