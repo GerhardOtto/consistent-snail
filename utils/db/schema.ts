@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, integer, varchar, smallint, date } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, integer, varchar, smallint, real, date } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -14,18 +14,19 @@ export const workout = pgTable("workout", {
 			columns: [table.workoutCategoryId],
 			foreignColumns: [workoutCategory.id],
 			name: "workout_workout_category_id_fkey"
-		}).onUpdate("set null").onDelete("set null"),
+		}).onUpdate("cascade").onDelete("restrict"),
 ]);
 
-export const exerciseDay = pgTable("exercise_day", {
-	id: integer().primaryKey().generatedByDefaultAsIdentity({ name: "exercise_day_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	date: date().notNull(),
+export const event = pgTable("event", {
+	id: integer().primaryKey().generatedByDefaultAsIdentity({ name: "event_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	workoutId: integer("workout_id").notNull(),
+	weight: real().notNull(),
+	date: date().notNull(),
 }, (table) => [
 	foreignKey({
 			columns: [table.workoutId],
 			foreignColumns: [workout.id],
-			name: "exercise_day_workout_id_fkey"
+			name: "event_workout_id_fkey"
 		}).onUpdate("cascade").onDelete("restrict"),
 ]);
 
@@ -34,6 +35,6 @@ export const workoutCategory = pgTable("workout_category", {
 	displayName: varchar("display_name", { length: 255 }).notNull(),
 });
 
-export type WorkoutType = typeof workout.$inferSelect;
-export type ExerciseDayType = typeof exerciseDay.$inferSelect;
+export type WorkoutRoutineType = typeof workout.$inferSelect;
+export type ExerciseEventType = typeof event.$inferSelect;
 export type WorkoutCategoryType = typeof workoutCategory.$inferSelect;

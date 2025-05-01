@@ -1,21 +1,21 @@
 import { relations } from "drizzle-orm/relations";
-import { workoutCategory, workout, exerciseDay } from "./schema";
+import { workoutCategory, workout, event } from "./schema";
 
 export const workoutRelations = relations(workout, ({one, many}) => ({
 	workoutCategory: one(workoutCategory, {
 		fields: [workout.workoutCategoryId],
 		references: [workoutCategory.id]
 	}),
-	exerciseDays: many(exerciseDay),
+	events: many(event),
 }));
 
 export const workoutCategoryRelations = relations(workoutCategory, ({many}) => ({
 	workouts: many(workout),
 }));
 
-export const exerciseDayRelations = relations(exerciseDay, ({one}) => ({
+export const eventRelations = relations(event, ({one}) => ({
 	workout: one(workout, {
-		fields: [exerciseDay.workoutId],
+		fields: [event.workoutId],
 		references: [workout.id]
 	}),
 }));
