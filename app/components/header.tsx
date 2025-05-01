@@ -28,7 +28,7 @@ export const Header = async () => {
 
   const svg = avatar.toDataUri();
   return (
-    <section className="flex justify-between w-full h-20 items-center z-10 fixed top-0 bg-background border-b">
+    <section className="flex justify-between h-20 items-center z-10 fixed top-0 left-0 w-full bg-background border-b">
       <div className="mx-5 w-full">
         <div className="flex w-full justify-between">
           <DropdownMenu>
