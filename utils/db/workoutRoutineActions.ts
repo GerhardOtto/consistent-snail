@@ -10,6 +10,11 @@ export const getWorkoutRoutines = async () => {
   return data;
 };
 
+export const getWorkoutRoutinesForCategory = async (workoutCategoryId: number) => {
+  const data = await db.select().from(workout).where(eq(workout.workoutCategoryId, workoutCategoryId));
+  return data;
+};
+
 export const addWorkoutRoutine = async (id: number, displayName: string, sets: number, reps: number, workoutCategoryId: number) => {
   await db.insert(workout).values({
     id: id,
