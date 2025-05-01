@@ -15,7 +15,7 @@ export const Footer = () => {
       <Menubar className="w-full flex justify-evenly mx-5">
         <MenubarMenu>
           <Button variant={"ghost"} asChild>
-            <Link href={"/"}>Index</Link>
+            <Link href={"/"}>Home</Link>
           </Button>
         </MenubarMenu>
         <MenubarMenu>
@@ -24,16 +24,9 @@ export const Footer = () => {
           </Button>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Manage</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem inset>
-              <Link href={"/manage/routine"}>Routine</Link>
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem inset>
-              <Link href={"/manage/workout"}>Workout</Link>
-            </MenubarItem>
-          </MenubarContent>
+          <Button variant={"ghost"} asChild>
+            <Link href={"/manage/workout"}>Manage</Link>
+          </Button>
         </MenubarMenu>
       </Menubar>
     </section>
