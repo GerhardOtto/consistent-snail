@@ -32,13 +32,14 @@ interface Props {
   displayName: string;
   sets: number;
   reps: number;
+  sessionId: number;
 }
 
 const formSchema = z.object({
   weightUsed: z.string().min(1),
 });
 
-export const WorkoutCard: FC<Props> = ({ id, displayName, sets, reps }) => {
+export const WorkoutCard: FC<Props> = ({ id, displayName, sets, reps, sessionId }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(true);
   const createWorkoutEvent = (weight: number): Promise<void> => {

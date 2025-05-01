@@ -59,3 +59,4 @@ export const session = pgTable("session", {
 export type WorkoutRoutineType = typeof workout.$inferSelect;
 export type ExerciseEventType = typeof event.$inferSelect;
 export type WorkoutCategoryType = typeof workoutCategory.$inferSelect;
+export type WorkoutSessionType = typeof session.$inferSelect;

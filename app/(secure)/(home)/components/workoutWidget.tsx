@@ -7,9 +7,10 @@ import { useState, useEffect } from "react";
 
 interface Props {
   workoutCategoryId: number;
+  sessionId: number;
 }
 
-export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId }) => {
+export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId, sessionId }) => {
   const [selectedWorkouts, setSelectedWorkouts] = useState<
     {
       id: number;
@@ -48,6 +49,7 @@ export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId }) => {
             displayName={item.displayName}
             sets={item.sets}
             reps={item.reps}
+            sessionId={sessionId}
           />
         ))}
       </div>
