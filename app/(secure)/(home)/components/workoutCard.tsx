@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,19 +38,14 @@ const formSchema = z.object({
   weightUsed: z.string().min(1),
 });
 
-export const WorkoutCard: FC<Props> = ({
-  id,
-  displayName,
-  sets,
-  reps,
-}) => {
+export const WorkoutCard: FC<Props> = ({ id, displayName, sets, reps }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  // const [visible, setVisible] = useState<boolean>(true);
+  const [visible, setVisible] = useState<boolean>(true);
   const createWorkoutEvent = (weight: number): Promise<void> => {
     setLoading(true);
     return addWorkoutEvent(id, weight)
       .then(() => {
-        // setVisible(false);
+        setVisible(false);
       })
       .catch((error) => {
         throw error;
@@ -81,58 +76,60 @@ export const WorkoutCard: FC<Props> = ({
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>{displayName}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 w-full items-center gap-4">
-                <div className="flex gap-x-3 items-center justify-center">
-                  <Label className="h-full" htmlFor="name">
-                    Sets
-                  </Label>
-                  <Badge className="w-1/3">{sets}</Badge>
+    visible && (
+      <>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle>{displayName}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 w-full items-center gap-4">
+                  <div className="flex gap-x-3 items-center justify-center">
+                    <Label className="h-full" htmlFor="name">
+                      Sets
+                    </Label>
+                    <Badge className="w-1/3">{sets}</Badge>
+                  </div>
+                  <div className="flex gap-x-3 items-center justify-center">
+                    <Label className="h-full" htmlFor="name">
+                      Reps
+                    </Label>
+                    <Badge className="w-1/3">{reps}</Badge>
+                  </div>
                 </div>
-                <div className="flex gap-x-3 items-center justify-center">
-                  <Label className="h-full" htmlFor="name">
-                    Reps
-                  </Label>
-                  <Badge className="w-1/3">{reps}</Badge>
-                </div>
-              </div>
-              <FormField
-                control={form.control}
-                name="weightUsed"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Weight Used</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Weight" {...field} type="number" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                <FormField
+                  control={form.control}
+                  name="weightUsed"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weight Used</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Weight" {...field} type="number" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                {!loading && (
+                  <Button type="submit" className="w-full">
+                    Submit
+                  </Button>
                 )}
-              />
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              {!loading && (
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
-              )}
-              {loading && (
-                <Button disabled className="w-full">
-                  <Loader2 className="animate-spin" />
-                  Please wait
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
-        </form>
-      </Form>
-    </>
+                {loading && (
+                  <Button disabled className="w-full">
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
+          </form>
+        </Form>
+      </>
+    )
   );
 };
