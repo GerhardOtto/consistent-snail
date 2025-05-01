@@ -11,9 +11,9 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <section className="flex justify-between h-20 items-center z-10">
-      <Menubar className="w-full flex justify-evenly mx-5">
-        <MenubarMenu>
+    <section className="flex justify-between h-20 items-center z-10 fixed bottom-0 left-0 w-full bg-background border-t">
+    <Menubar className="w-full flex justify-evenly mx-5">
+      <MenubarMenu>
           <Button variant={"ghost"} asChild>
             <Link href={"/"}>Home</Link>
           </Button>

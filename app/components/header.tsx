@@ -27,28 +27,27 @@ export const Header = async () => {
   });
 
   const svg = avatar.toDataUri();
-
   return (
-    <section className="flex justify-between h-20 items-center z-10">
+    <section className="flex justify-between w-full h-20 items-center z-10 fixed top-0 bg-background border-b">
       <div className="mx-5 w-full">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex w-full justify-between">
-                <Avatar>
-                  <AvatarImage src={svg} alt="Profile Icon" />
-                  <AvatarFallback>-_-</AvatarFallback>
-                </Avatar>
-              <p className="">Hello {data.user.email}</p>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-72">
-            <DropdownMenuGroup>
-              <DropdownMenuItem disabled>Profile</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex w-full justify-between">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar>
+                <AvatarImage src={svg} alt="Profile Icon" />
+                <AvatarFallback>-_-</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-72 mx-5">
+              <DropdownMenuGroup>
+                <DropdownMenuItem disabled>Profile</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <p className="">Hello {data.user.email}</p>
+        </div>
       </div>
     </section>
   );

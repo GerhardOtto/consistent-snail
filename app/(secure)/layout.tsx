@@ -9,7 +9,7 @@ export default function SecureLayout({
   return (
     <section className="flex flex-col min-h-screen">
       <Header />
-      <div className="grow">{children}</div>
+      <div className="grow pt-24">{children}</div>
       <Footer />
     </section>
   );
