@@ -65,6 +65,18 @@ export const UpdateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
     },
   });
 
+  const { setValue } = form;
+
+  const handleCategoryChange = (categoryId: string) => {
+    const selectedCategory = workoutCategoryItems.find(
+      (category) => String(category.id) === categoryId
+    );
+
+    if (selectedCategory) {
+      setValue("workoutCategoryName", selectedCategory.displayName);
+    }
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     renameWorkoutCategory(
       Number(values.workoutCategoryId),
@@ -104,7 +116,10 @@ export const UpdateWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
                     <FormItem>
                       <FormLabel>Category</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleCategoryChange(value);
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>

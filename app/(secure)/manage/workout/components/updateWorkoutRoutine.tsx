@@ -26,8 +26,7 @@ import {
 } from "@/components/ui/select";
 import { WorkoutCategoryType, WorkoutRoutineType } from "@/utils/db/schema";
 import {
-  addWorkoutRoutine,
-  editWorkoutRoutine,
+  editWorkoutRoutine
 } from "@/utils/db/workoutRoutineActions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC, useState } from "react";
@@ -87,6 +86,26 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
     },
   });
 
+  const { setValue } = form;
+
+  const handleRoutineChange = (routineId: string) => {
+    const selectedRoutine = workoutRoutineItems.find(
+      (routine) => String(routine.id) === routineId
+    );
+
+    if (selectedRoutine) {
+      setValue("workoutRoutineName", selectedRoutine.displayName);
+      setValue("sets", String(selectedRoutine.sets));
+      setValue("reps", String(selectedRoutine.reps));
+      setValue("workoutCategoryId", String(selectedRoutine));
+    } else {
+      setValue("workoutRoutineName", "");
+      setValue("sets", "");
+      setValue("reps", "");
+      setValue("workoutCategoryId", "");
+    }
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateWorkoutRoutine(
       parseInt(values.workoutRoutineId, 10),
@@ -95,7 +114,7 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
       parseInt(values.reps, 10),
       parseInt(values.workoutCategoryId, 10)
     );
-    toast(`Created routine: ${values.workoutRoutineName}`);
+    toast(`Updated routine: ${values.workoutRoutineName}`);
     setOpen(false);
     form.reset();
     console.log(values);
@@ -129,7 +148,10 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
                     <FormItem>
                       <FormLabel>Routine</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleRoutineChange(value);
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>
@@ -156,7 +178,7 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Name" {...field}/>
+                        <Input placeholder="Name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -200,7 +222,7 @@ export const UpdateWorkoutRoutine: FC<Props> = ({
                       >
                         <FormControl>
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select a category to update" />
+                            <SelectValue placeholder="Select a new category" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
