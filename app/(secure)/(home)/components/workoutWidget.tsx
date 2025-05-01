@@ -4,6 +4,7 @@ import { getWorkoutRoutinesForCategory } from "@/utils/db/workoutRoutineActions"
 import React from "react";
 import { WorkoutCard } from "./workoutCard";
 import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
   workoutCategoryId: number;
@@ -35,12 +36,11 @@ export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId, sessionId })
   }, [workoutCategoryId]);
 
   if (loading) {
-    return <p>Loading workouts...</p>;
+    return         <Skeleton className="h-40 w-full" />;
   }
 
   return (
     <>
-      {workoutCategoryId && <p>Selected Category ID: {workoutCategoryId}</p>}
       <div className="flex flex-col gap-5">
         {selectedWorkouts.map((item) => (
           <WorkoutCard

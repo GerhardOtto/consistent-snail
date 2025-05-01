@@ -16,7 +16,6 @@ export default async function PrivatePage() {
     <section>
       <p className="mx-5">Hello {data.user.email}</p>
       <LogSession categories={categories} />
-      {/* <WorkoutCard id={1} displayName={"DisplayName"} sets={3} reps={3}/> */}
     </section>
   );
 }

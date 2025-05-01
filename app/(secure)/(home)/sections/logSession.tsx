@@ -27,7 +27,7 @@ export const LogSession: React.FC<Props> = ({ categories }) => {
   };
 
   return (
-    <section className="mx-5">
+    <section className="mx-5 space-y-5">
       <SelectCategory
         categories={categories}
         onCategorySelect={handleCategorySelect}
