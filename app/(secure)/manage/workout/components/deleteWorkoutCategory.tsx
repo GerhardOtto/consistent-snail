@@ -133,7 +133,7 @@ export const DeleteWorkoutCategory: FC<Props> = ({ workoutCategories }) => {
                       >
                         <FormControl>
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select a category to update" />
+                            <SelectValue placeholder="Select a category to delete" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
