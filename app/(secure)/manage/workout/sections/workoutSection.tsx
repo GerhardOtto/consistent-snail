@@ -9,37 +9,38 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { WorkoutCategoryType } from "@/utils/db/schema";
+import { WorkoutCategoryType, WorkoutRoutineType } from "@/utils/db/schema";
 import { Label } from "@radix-ui/react-label";
 import { FC } from "react";
 import { CreateWorkoutCategory } from "../components/createWorkoutCategory";
 import { DeleteWorkoutCategory } from "../components/deleteWorkoutCategory";
 import { UpdateWorkoutCategory } from "../components/updateWorkoutCategory";
+import { CreateWorkoutRoutine } from "../components/createWorkoutRoutine";
 
 interface Props {
   workoutCategories: WorkoutCategoryType[];
+  workoutRoutines: WorkoutRoutineType[];
 }
 
-export const WorkoutCategories: FC<Props> = ({ workoutCategories }) => {
+export const WorkoutSection: FC<Props> = ({ workoutCategories, workoutRoutines }) => {
   return (
     <section className="flex justify-center mx-5">
-      <Tabs defaultValue="workouts" className="w-96">
+      <Tabs defaultValue="routines" className="w-96">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="workouts">Workouts</TabsTrigger>
+          <TabsTrigger value="routines">Routines</TabsTrigger>
           <TabsTrigger value="categories">Categories</TabsTrigger>
         </TabsList>
-        <TabsContent value="workouts">
+        <TabsContent value="routines">
           <Card>
             <CardHeader>
-              <CardTitle>Manage Workouts</CardTitle>
+              <CardTitle>Manage Routines</CardTitle>
               <CardDescription>
-                Create, update and delete your workouts here.
+                Create, update and delete your workout routines here.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" defaultValue="Pedro Duarte" />
+                <CreateWorkoutRoutine workoutRoutines={workoutRoutines} workoutCategories={workoutCategories}/>
               </div>
               <div className="space-y-1">
                 <Label htmlFor="username">Username</Label>
