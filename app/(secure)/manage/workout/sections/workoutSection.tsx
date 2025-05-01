@@ -27,10 +27,6 @@ export const WorkoutSection: FC<Props> = ({ workoutCategories, workoutRoutines }
   return (
     <section className="flex justify-center mx-5">
       <Tabs defaultValue="routines" className="w-96">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="routines">Routines</TabsTrigger>
-          <TabsTrigger value="categories">Categories</TabsTrigger>
-        </TabsList>
         <TabsContent value="routines">
           <Card>
             <CardHeader>
@@ -70,6 +66,10 @@ export const WorkoutSection: FC<Props> = ({ workoutCategories, workoutRoutines }
             </CardContent>
           </Card>
         </TabsContent>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="routines">Routines</TabsTrigger>
+          <TabsTrigger value="categories">Categories</TabsTrigger>
+        </TabsList>
       </Tabs>
     </section>
   );
