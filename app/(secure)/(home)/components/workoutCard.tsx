@@ -74,7 +74,7 @@ export const WorkoutCard: FC<Props> = ({
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
-      await createWorkoutEvent(parseInt(value.weightUsed, 10))
+      await createWorkoutEvent(Number(value.weightUsed))
       toast.success(`Successfully stored workout event`);
     } catch (error: any) {
       toast.error(

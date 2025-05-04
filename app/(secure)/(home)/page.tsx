@@ -12,8 +12,8 @@ export default async function PrivatePage() {
   }
 
   return (
-    <section>
+    <>
       <LogSession categories={categories} />
-    </section>
+    </>
   );
 }
