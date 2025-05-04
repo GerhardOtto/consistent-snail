@@ -38,8 +38,8 @@ export const ProgressChart: React.FC<Props> = ({ chartData }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart - Dots</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Workout Line Chart</CardTitle>
+        <CardDescription>Workout specific progress</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -54,10 +54,11 @@ export const ProgressChart: React.FC<Props> = ({ chartData }) => {
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="workoutCategoryName"
+              name="Category"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 8)}
             />
             <ChartTooltip
               cursor={false}
@@ -65,6 +66,7 @@ export const ProgressChart: React.FC<Props> = ({ chartData }) => {
             />
             <Line
               dataKey="eventWeight"
+              name="Avg. Weight"
               type="natural"
               stroke="var(--color-desktop)"
               strokeWidth={2}
@@ -79,12 +81,6 @@ export const ProgressChart: React.FC<Props> = ({ chartData }) => {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
       </CardFooter>
     </Card>
   )
