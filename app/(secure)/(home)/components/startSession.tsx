@@ -6,33 +6,31 @@ import { toast } from "sonner";
 
 interface Props {
   onStartSession: (id: number) => void;
+  setActiveSession: (active: boolean) => void
+  activeSession: boolean
 }
 
-export const StartSession: React.FC<Props> = ({ onStartSession }) => {
+export const StartSession: React.FC<Props> = ({ onStartSession, setActiveSession, activeSession }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [activeSession, setActiveSession] = useState<boolean>(false);
 
   const CreateWorkoutSession = async (): Promise<void> => {
     setLoading(true);
-    const sessionId = addWorkoutSession();
-    return sessionId
-      .then(async () => {
-        onStartSession(await sessionId);
-        toast.success(`Started session number: ${sessionId}`);
-        setActiveSession(true);
-      })
-      .catch((error) => {
-        console.error("Error creating workout session:", error);
-        toast.error(
-          `Failed to start session: ${
-            error.message || "An unexpected error occurred."
-          }`
-        );
-        throw error;
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const sessionId = await addWorkoutSession();
+      onStartSession(sessionId);
+      toast.success(`Started session number: ${sessionId}`);
+      setActiveSession(true)
+    } catch (error) {
+      console.error("Error creating workout session:", error);
+      toast.error(
+        `Failed to start session: ${
+          (error as Error).message || "An unexpected error occurred."
+        }`
+      );
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

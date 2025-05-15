@@ -26,6 +26,8 @@ export const LogSession: React.FC<Props> = ({ categories }) => {
     setDisableCategory(true);
   };
 
+  const [activeSession, setActiveSession] = useState<boolean>(false)
+
   return (
     <section className="mx-5 space-y-5">
       <SelectCategory
@@ -34,13 +36,12 @@ export const LogSession: React.FC<Props> = ({ categories }) => {
         disableSelect={disableCategory}
       />
       {selectedCategoryId && (
-        <StartSession onStartSession={handleStartSession} />
-      )}
-      {selectedCategoryId && sessionId && (
         <WorkoutWidget
           workoutCategoryId={selectedCategoryId}
-          sessionId={sessionId}
-        />
+          sessionId={sessionId} activeSession={activeSession} />
+      )}
+      {selectedCategoryId && (
+        <StartSession onStartSession={handleStartSession} setActiveSession={setActiveSession} activeSession={activeSession} />
       )}
     </section>
   );

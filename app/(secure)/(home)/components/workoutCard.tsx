@@ -23,7 +23,8 @@ import { addWorkoutEvent } from "@/utils/db/workoutEventActions";
 import { addWorkoutEventOnWorkoutSession } from "@/utils/db/workoutSessionAction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
+import { FC, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -33,7 +34,8 @@ interface Props {
   displayName: string;
   sets: number;
   reps: number;
-  sessionId: number;
+  sessionId: number | undefined;
+  activeSession: boolean
 }
 
 const formSchema = z.object({
@@ -46,23 +48,24 @@ export const WorkoutCard: FC<Props> = ({
   sets,
   reps,
   sessionId,
+  activeSession
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [visible, setVisible] = useState<boolean>(true);
-  const createWorkoutEvent = (weight: number): Promise<void> => {
+  // const router = useRouter()
+
+  const createWorkoutEvent = async (weight: number): Promise<void> => {
     setLoading(true);
-    const workoutId = addWorkoutEvent(id, weight);
-    return workoutId
-      .then(async () => {
-        setVisible(false)
-        await addWorkoutEventOnWorkoutSession(await workoutId, sessionId)
-      })
-      .catch((error) => {
-        throw error;
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const workoutId = await addWorkoutEvent(id, weight);
+      if (sessionId) {
+        await addWorkoutEventOnWorkoutSession(workoutId, sessionId);
+      }
+    } catch (error) {
+      console.debug(`Create workout event: ${error}`);
+    } finally {
+      setLoading(false);
+      // router.push(".");
+    }
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -86,7 +89,6 @@ export const WorkoutCard: FC<Props> = ({
   }
 
   return (
-    visible && (
       <>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -116,7 +118,7 @@ export const WorkoutCard: FC<Props> = ({
                     <FormItem>
                       <FormLabel>Weight Used</FormLabel>
                       <FormControl>
-                        <Input placeholder="Weight" {...field} type="number" />
+                        <Input placeholder="Weight" {...field} type="number" disabled={!activeSession} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -125,7 +127,7 @@ export const WorkoutCard: FC<Props> = ({
               </CardContent>
               <CardFooter className="flex justify-between">
                 {!loading && (
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full" disabled={!activeSession}>
                     Submit
                   </Button>
                 )}
@@ -141,5 +143,4 @@ export const WorkoutCard: FC<Props> = ({
         </Form>
       </>
     )
-  );
 };

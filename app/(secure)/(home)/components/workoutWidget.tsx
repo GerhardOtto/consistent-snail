@@ -8,10 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
   workoutCategoryId: number;
-  sessionId: number;
+  sessionId: number | undefined;
+  activeSession: boolean;
 }
 
-export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId, sessionId }) => {
+export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId, sessionId, activeSession }) => {
   const [selectedWorkouts, setSelectedWorkouts] = useState<
     {
       id: number;
@@ -50,6 +51,7 @@ export const WorkoutWidget: React.FC<Props> = ({ workoutCategoryId, sessionId })
             sets={item.sets}
             reps={item.reps}
             sessionId={sessionId}
+            activeSession={activeSession}
           />
         ))}
       </div>

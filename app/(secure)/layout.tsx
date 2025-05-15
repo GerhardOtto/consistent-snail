@@ -7,9 +7,9 @@ export default function SecureLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col">
+    <section className="flex flex-col mb-15">
       <Header />
-      <div className="grow pt-24">{children}</div>
+      <div className="grow pt-24 pb-10">{children}</div>
       <Footer />
     </section>
   );
