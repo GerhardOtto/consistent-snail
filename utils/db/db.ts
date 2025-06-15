@@ -7,7 +7,7 @@ import { PgTable } from 'drizzle-orm/pg-core'
 
 // dotenv.config({ path: '.env.local' })
 
-const connectionString: string = process.env.DATABASE_URL || ""
+const connectionString: string = process.env.DATABASE_URL! || ""
 
 // Disable prefetch as it is not supported for "Transaction" pool mode
 export const client = postgres(connectionString, { prepare: false })
